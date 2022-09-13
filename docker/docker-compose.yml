@@ -1,0 +1,24 @@
+version: '3.5'
+
+networks:
+ jwks-network:
+    name: jwks-network
+
+services:
+ jwks:
+    build: ./development
+    image: jwks_service:dev
+    expose:
+      - 80
+    networks:
+      - jwks-network
+    restart: always
+    volumes:
+      - /home/diagro/service_jwks:/diagro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jwks_service.entrypoints=websecure"
+      - "traefik.http.routers.jwks_service.rule=Host(`jwks.diagro.dev`)"
+      - "traefik.http.routers.jwks_service.tls=true"
+      - "traefik.http.routers.jwks_service.tls.certresolver=production"
+      - "traefik.docker.network=jwks-network"
